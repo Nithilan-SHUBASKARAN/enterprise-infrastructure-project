@@ -66,6 +66,8 @@ L'ensemble de l'environnement est virtualisé sur la plateforme **Proxmox VE** h
 
 ### 3.1. Virtualisation Proxmox VE & Routage pfSense
 
+![Architecture de Routage et Filtrage pfSense](images/pfsense-routing.png)
+
 #### Étape A : Configuration des Bridges Réseau sous Proxmox VE
 1. Accédez à l'interface web Proxmox (`https://192.168.1.X:8006`).
 2. Allez dans **Datacenter** > **Noeud Proxmox** > **System** > **Network**.
@@ -126,6 +128,8 @@ nano /etc/network/interfaces
 
 ### 3.3. NAS OpenMediaVault (RAID 1 & Partages SMB)
 
+![Architecture de Stockage OpenMediaVault NAS RAID 1](images/omv-storage-raid.png)
+
 1. **Architecture Disque** :
    * Disque Système : `/dev/sdb` (64 Go).
    * Volume RAID 1 (Miroir) : `/dev/sda` (250 Go) + `/dev/sdc` (250 Go) -> Volume `397a23f3-3263-423e-8d58-5f41380dc0bc`.
@@ -139,7 +143,11 @@ nano /etc/network/interfaces
 
 ---
 
-### 3.4. Messagerie Unifiée Mailcow (Docker & LDAP)
+### 3.4. Services Applicatifs Docker (Mailcow, Dolibarr, Xibo)
+
+![Architecture des Conteneurs Docker](images/docker-services.png)
+
+#### A. Messagerie Unifiée Mailcow (Docker & LDAP)
 
 #### Procédure d'installation en ligne de commande :
 ```bash
