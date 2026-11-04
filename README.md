@@ -262,4 +262,4 @@ docker compose up -d
 ## 🎓 5. Academic Framework & Credits
 
 Project completed as part of the **BTS Services Informatiques aux Organisations (SIO) - SISR Option** (2024–2026 Session).  
-*GitHub - Design & Publication* by **Nithilan SHUBASKARAN**
+*GitHub - Design & Publication by* **Nithilan SHUBASKARAN**
