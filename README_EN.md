@@ -1,208 +1,106 @@
-<p align="center">
-  <img src="images/logo-sbn.png" width="220" alt="SBN Solution Tech Logo">
-</p>
+# 🚀 Network Infrastructure & Virtualized Services — SBN Solution Tech
 
-# 🚀 Enterprise Network & Virtualized Infrastructure — SBN Solution Tech
-
-> **Technical Exam Project — BTS SIO (IT Services for Organizations) SISR Option (2024–2026 Session)**  
-> *Technical documentation of network architecture, Proxmox VE virtualization, and enterprise service deployment.*
+> **Technical Project — Higher National Diploma / Associate Degree in IT & Network Administration (BTS SIO SISR — 2024–2026 Session)**  
+> *Technical documentation for network architecture, Proxmox VE virtualization, and enterprise service deployment.*
 
 ---
 
-🌐 **Languages / Langues** : [Français](README.md) | [English](README_EN.md)
+## 📋 Project Overview
+
+This project aims to design, deploy, and manage a fully virtualized, secure 100% enterprise network infrastructure for **SBN Solution Tech** (a computer hardware sales and repair business).
+
+The entire environment is hosted on a **Proxmox VE** hypervisor platform running on a physical **Dell PowerEdge R730** server.
 
 ---
 
-## 📋 1. Project Overview
+## 🏗️ Network Architecture & Virtualization
 
-This project aims to design, deploy, and administer a 100% virtualized, segmented, and secure enterprise IT infrastructure for **SBN Solution Tech**, a company specializing in high-performance computer hardware sales and IT repair services.
+### 1. Hypervisor & Routing
+* **Hypervisor**: Proxmox VE (Debian Linux-based, utilizing KVM for VMs and LXC for containers).
+* **Firewall / Main Router**: **pfSense** Virtual Machine (FreeBSD) handling inter-VLAN routing, security filtering, and centralized DHCP service.
 
-The entire environment is hosted on a **Proxmox VE** hypervisor running on a physical **Dell PowerEdge R730** server.
+### 2. VLAN Segmentation (802.1Q)
+The internal network is logically segmented into subnets to ensure traffic isolation and security:
+* **VLAN 10 — Management / Accounting**: `192.168.10.0/24`
+* **VLAN 20 — Workshop (Atelier)**: `192.168.20.0/24`
+* **VLAN 30 — Store / Retail (Magasin)**: `192.168.30.0/24`
+* **LAN Management / Infrastructure**: `192.168.1.0/24` (pfSense / Proxmox administration network)
+
+### 3. Infrastructure Logical Diagram
 
 ```text
-                                    [ WAN / Internet Access ]
-                                               |
-                                     (vmbr0 - WAN Proxmox)
-                                               |
-                                    +---------------------+
-                                    |  pfSense Firewall   | (Inter-VLAN Routing & DHCP)
-                                    +---------------------+
-                                               |
-                                  (vmbr2 - Trunk VLAN-Aware)
-                                               |
-          +------------------------------------+------------------------------------+
-          |                                    |                                    |
- [VLAN 10 : Management]               [VLAN 20 : Workshop]                 [VLAN 30 : Store]
- 192.168.10.0/24                      192.168.20.0/24                      192.168.30.0/24
-  - SRV-DC01-D (Active Directory)      - Client PC-0X-A (Win 11)            - SRV-DC02-M (AD Replicated)
-  - OpenMediaVault NAS (RAID 1)        - Dolibarr ERP Server                - Xibo CMS Server (Docker)
-  - Mailcow Mail Server (Docker)                                            - Store Display Players
+                     [ WAN / Internet Access ]
+                                 |
+                          (vmbr0 - WAN)
+                                 |
+                        +-----------------+
+                        |   pfSense VM    | (Firewall & Centralized DHCP)
+                        +-----------------+
+                                 |
+                      (vmbr1 - Trunk VLAN-Aware)
+                                 |
+       +-------------------------+-------------------------+
+       |                         |                         |
+  [VLAN 10: Management]    [VLAN 20: Workshop]     [VLAN 30: Retail Store]
+  192.168.10.0/24          192.168.20.0/24         192.168.30.0/24
+   - Active Directory       - Workshop Workstations - Xibo Server (CMS)
+   - OpenMediaVault NAS     - Dolibarr ERP/CRM      - POS & Display Players
+   - Mailcow Mail Server
 ```
 
-![Infrastructure Architecture Schema](images/schema-infrastructure.png)
+---
+
+## 🛠️ Deployed Services & Servers
+
+### 🔐 Active Directory & Windows Server Infrastructure
+* **Domain Controllers**: `SRV-DC01-D` and `SRV-DC02-M` (Domain `sbn.solution`).
+* **DNS Service**: Integrated within Active Directory for internal name resolution.
+* **File Management & High Availability**:
+  * **DFS** Namespaces (`\\sbn.solution\Users\Data`).
+  * **DFS Replication** (`Users-Replication`) for automatic synchronization of user directories between both domain controllers.
+* **Group Policies (GPO)**:
+  * Automated redirection of user folders (*Desktop, Documents, Downloads, Pictures, Music, Videos*).
+  * Automatic network drive mapping and corporate desktop wallpaper enforcement.
+
+### ✉️ Unified Communications (Mailcow Mail Server)
+* **Architecture**: Containerized deployment based on **Docker**.
+* **Features**: SMTP, IMAP, ActiveSync services, **SOGo** Webmail interface, antivirus, and anti-spam protection.
+* **Authentication**: LDAP synchronization and Active Directory integration.
+
+### 💼 Enterprise ERP / CRM (Dolibarr)
+* **Tech Stack**: Linux server (Debian/Ubuntu), Apache2, PHP, MariaDB database.
+* **Features**: Inventory tracking, commercial management, logistics, and financial reporting.
+* **File Sharing**: Associated SMB server (**Samba**) for business document storage and sharing.
+
+### 📺 Digital Signage (Xibo)
+* **Architecture**: **Xibo CMS** server running under Docker on Ubuntu Server (`192.168.30.14`).
+* **Broadcasting**: Management and control of showcase display players via **Xibo Player**.
+* **Administration & Media**: Secure media file transfers via **SFTP / FileZilla**.
+
+### 💾 Centralized Storage & Backup (OpenMediaVault NAS)
+* **NAS System**: OpenMediaVault on Debian base (`192.168.10.250`).
+* **Physical Redundancy**: Volume configured in **RAID 1 (Mirroring)**.
+* **SMB/CIFS Shares**: `Direction`, `Atelier`, `Magasin`, and `Wallpaper` folders with group-restricted access (`Administrators`, `Users-A`, `Users-M`, `Users-D`).
+* **Extensions (OMV-Extras)**: Integration of FileBrowser and PhotoPrism.
+* **Backups**: Automated incremental backups for Dolibarr's MariaDB database and sensitive network files.
 
 ---
 
-## 🏗️ 2. Network Architecture & IP Addressing
+## 🖥️ Client Workstations & Validation
 
-### 2.1. Logical VLAN Segmentation (802.1Q)
-| VLAN | Role / Service | Subnet CIDR | Gateway (pfSense) | DHCP Range / Pool | Static IP Reservations |
-| :--- | :--- | :--- | :--- | :--- | :--- |
-| **VLAN 10** | Management & HR | `192.168.10.0/24` | `192.168.10.1` | `192.168.10.10–50` | AD Servers (`.200`), NAS (`.250`), Mail (`.12`) |
-| **VLAN 20** | Repair Workshop | `192.168.20.0/24` | `192.168.20.1` | `192.168.20.10–50` | Dolibarr ERP Server (`.200`), PC-A Clients |
-| **VLAN 30** | Retail Store & Display | `192.168.30.0/24` | `192.168.30.1` | `192.168.30.10–50` | Secondary AD (`.200`), Xibo Server (`.14`), Players |
-| **VLAN 1** | Management / Admin | `192.168.1.0/24` | `192.168.1.1` | `192.168.1.10–50` | Proxmox VE (`192.168.1.X`), Dell iDRAC |
-
-### 2.2. Key Infrastructure Servers
-| Hostname | Operating System | IP Address | Deployed Roles & Services |
-| :--- | :--- | :--- | :--- |
-| `SRV-DC01-D` | Windows Server 2022 | `192.168.10.200` | Primary Domain Controller, DNS, DFS Root |
-| `SRV-DC02-M` | Windows Server 2022 | `192.168.30.200` | Secondary Domain Controller, AD & DFS Replication |
-| `NAS-D` | OpenMediaVault 8.1 / Debian | `192.168.10.250` | RAID 1 NAS Storage, SMB Shares, OMV-Extras |
-| `MAILCOW` | Ubuntu Server 22.04 / Docker | `192.168.20.12` | Mailcow Suite (SMTP/IMAP/SOGo) + LDAP Sync |
-| `Dolibarr` | Debian / Apache / MariaDB | `192.168.20.200` | Commercial ERP / CRM + Samba File Server |
-| `SRV-XIBO-M` | Ubuntu Server 22.04 / Docker | `192.168.30.14` | Xibo CMS Digital Signage Server & SFTP |
-| `Player-XIBO0X` | Windows 11 Pro | DHCP (VLAN 30) | Display Monitors running Xibo Player |
+* **Windows Clients**: Windows 11 Pro joined to the `sbn.solution` domain, tested with full GPO enforcement.
+* **Linux Clients**: **Ubuntu Desktop** workstations joined to the Active Directory domain to validate centralized authentication and web service interoperability (Mailcow, Dolibarr, Samba).
 
 ---
 
-## 🛠️ 3. Detailed Step-by-Step Configuration
+## 🔒 Security & Compliance
 
-### 3.1. Virtualization (Proxmox VE) & Firewalling (pfSense)
-
-![pfSense Routing and Firewall Architecture](images/pfsense-routing.png)
-
-#### Step A: Network Bridges Setup in Proxmox VE
-1. Access Proxmox Web GUI (`https://192.168.1.X:8006`).
-2. Navigate to **Datacenter** > **Proxmox Node** > **System** > **Network**.
-3. Keep `vmbr0` attached to physical interface `enp4s0` (WAN).
-4. Create Linux Bridge **`vmbr1`** for administration.
-5. Create main trunk bridge **`vmbr2`** (Name: `LAN_VLANs`, check **VLAN aware**).
-6. Click **Apply Configuration**.
-
-#### Step B: pfSense Configuration & Inter-VLAN Routing
-1. Assign virtual interfaces to pfSense VM:
-   * `em0` / `vtnet0` -> `vmbr0` (WAN)
-   * `em1` / `vtnet1` -> `vmbr1` (LAN Admin - `10.0.0.1/30`)
-   * `em2` / `vtnet2` -> `vmbr2` (LAN Trunk VLANs)
-2. In pfSense (**Interfaces** > **VLANs**), add sub-interfaces on `em2`:
-   * Tag `10` -> `VLAN10` (`192.168.10.1/24`)
-   * Tag `20` -> `VLAN20` (`192.168.20.1/24`)
-   * Tag `30` -> `VLAN30` (`192.168.30.1/24`)
-3. **Firewall Rules**:
-   * Block inter-VLAN traffic by default.
-   * Explicitly allow AD traffic between VLAN 10 and 30 (`LDAP 389/636`, `Kerberos 88`, `RPC 135`, `DNS 53`).
+* **Perimeter Security**: Strict inter-VLAN traffic filtering via pfSense rules.
+* **Backups**: Daily incremental backup schedule to dedicated NAS.
+* **Privacy & GDPR Compliance**: Protection of client records and adherence to least-privilege principles.
 
 ---
 
-### 3.2. Active Directory Domain Services, DFS & Group Policies (GPO)
+## 🎓 Project Framework
 
-![Active Directory & DFS Architecture](images/ad-dfs-architecture.png)
-
-#### Step A: Domain Controllers Deployment & Replication
-1. Install **AD DS** and **DNS** roles on `SRV-DC01-D` and create forest **`sbn.solution`**.
-2. Join `SRV-DC02-M` to domain `sbn.solution` and promote it as replicated domain controller.
-
-##### Screenshots of IP Configuration & Active Directory:
-| DC01 IP Setup | DC02 IP Setup | AD Users & Computers |
-| :---: | :---: | :---: |
-##### Domain Controllers IP Configuration Captures:
-
-<div align="center">
-
-| SRV-DC01-D (VLAN 10 — Direction) | SRV-DC02-M (VLAN 30 — Store) |
-| :---: | :---: |
-| <img src="images/captures/ip-dc01.png" width="420" alt="IP Config SRV-DC01-D"> | <img src="images/captures/ip-dc02.png" width="420" alt="IP Config SRV-DC02-M"> |
-
-</div>
-
-##### Active Directory, DNS & Groups Console:
-
-![Active Directory Users & Computers Console](images/captures/ad-users-pcs.png)
-
-![DNS Manager & Forward Lookup Zones](images/captures/dns-manager.png)
-
-![Active Directory Groups & Users](images/captures/ad-groups-omv.png)
-
-* DNS Management Console: `![DNS Manager](images/captures/dns-manager.png)`
-* AD Groups & Users Management: `![AD Groups](images/captures/ad-groups-omv.png)`
-
-#### Step B: DFS Namespace & GPO Setup
-1. **DFS (Distributed File System)**:
-   * Namespace Root: `\\sbn.solution\Users`
-   * Target Folder: `Data` on dedicated drive `S:` (250 GB)
-   * Replication Group: `Users-Replication` synchronized between DC01 and DC02.
-
-##### DFS & GPO Redirection Screenshots:
-| DFS Namespace | GPO Folder Redirection |
-| :---: | :---: |
-| ![DFS Users](images/captures/dfs-users.png) | ![GPO Redirection](images/captures/gpo-redirection.png) |
-
-2. **Deployed GPOs**:
-   * **Users-Folder-Redirection**: Redirects *Documents, Desktop, Pictures, Downloads* to `\\sbn.solution\Users\Data\%USERNAME%`.
-   * **NAS-Mapping-A**: Maps drive `A:` (`\\NAS-D\Atelier`) for group `Users-A`.
-   * **NAS-Mapping-D**: Maps drive `D:` (`\\NAS-D\Direction`) for group `Users-D`.
-   * **NAS-Mapping-M**: Maps drive `M:` (`\\NAS-D\Magasin`) for group `Users-M`.
-
----
-
-
-
-#### Step C: Departmental Enterprise Wallpapers Deployment (GPO Wallpapers)
-Official SBN Solution Tech wallpapers are automatically deployed via GPO based on the user's department:
-
-![Direction Department Wallpaper](images/captures/wallpaper-direction.png)
-![Repair Workshop Wallpaper](images/captures/wallpaper-atelier.png)
-![Retail Store Wallpaper](images/captures/wallpaper-magasin.png)
-
-
-### 3.3. Centralized NAS Storage (OpenMediaVault RAID 1)
-
-![OpenMediaVault RAID 1 Storage Architecture](images/omv-storage-raid.png)
-
-1. **Disk Layout**:
-   * System Disk: `/dev/sdb` (64 GB).
-   * RAID 1 Volume (Mirror): `/dev/sda` (250 GB) + `/dev/sdc` (250 GB) -> Volume `397a23f3-3263-423e-8d58-5f41380dc0bc`.
-2. **Groups & SMB Shares**:
-   * Created Groups: `Administrators`, `Users-A` (Workshop), `Users-D` (Management), `Users-M` (Store).
-   * Shared Folders: `Atelier`, `Direction`, `Magasin`, `Wallpaper`.
-3. **OMV-Extras Extensions**: Activation of **FileBrowser** and **PhotoPrism**.
-
-##### Disk Management & Scheduled Backup Task Screenshots:
-| Disk Management | Automated Backup Task |
-| :---: | :---: |
-| ![Disk Management](images/captures/disk-management.png) | ![Backup Task](images/captures/backup-task.png) |
-
----
-
-### 3.4. Containerized Application Services (Mailcow, Dolibarr, Xibo)
-
-![Docker Container Services Architecture](images/docker-services.png)
-
-#### A. Unified Email Suite (Mailcow Dockerized)
-* **FQDN**: `mail.sbn.solution`
-* **Sync cron**: AD LDAP synchronization every minute.
-
-#### B. ERP / CRM Dolibarr
-* **Stack**: LAMP (Linux Debian, Apache2, MariaDB, PHP).
-* **Backup**: Automated database dumps sent to OMV NAS `NAS-D`.
-
-![Xibo CMS Dashboard](images/captures/xibo-page.png)
-
-#### C. Digital Signage (Xibo CMS & SFTP)
-* **CMS Host**: `192.168.30.14`
-* **Media Transfer**: SFTP (Port 22) via FileZilla to store displays.
-
----
-
-## 🔒 4. Backup Strategy & Security Policies
-
-* **Perimeter Security**: Strict inter-VLAN filtering on pfSense with default-deny policy.
-* **Backup Policy**: Daily incremental exports of databases and shares to OpenMediaVault RAID 1.
-* **High Availability**: Hardware fault tolerance (RAID 1), AD DS domain replication, and DFS-R sync.
-
----
-
-## 🎓 5. Academic Framework & Credits
-
-Project completed as part of the **BTS Services Informatiques aux Organisations (SIO) - SISR Option** (2024–2026 Session).
+Project developed as part of the **BTS SIO (Services Informatiques aux Organisations) — SISR Option** (2024–2026 Session).
