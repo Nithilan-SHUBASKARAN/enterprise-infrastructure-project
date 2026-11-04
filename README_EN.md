@@ -32,11 +32,11 @@ The entire environment is hosted on a **Proxmox VE** hypervisor running on a phy
                                                |
           +------------------------------------+------------------------------------+
           |                                    |                                    |
- [VLAN 10 : Direction]                [VLAN 20 : Workshop]                 [VLAN 30 : Store]
+ [VLAN 10 : Management]               [VLAN 20 : Workshop]                 [VLAN 30 : Store]
  192.168.10.0/24                      192.168.20.0/24                      192.168.30.0/24
-  - SRV-DC01-D (Active Directory)      - Client PC-0X-A (Win 11)            - SRV-DC02-M (Replicated AD)
-  - NAS OpenMediaVault (RAID 1)        - Dolibarr ERP Server (Samba)        - Xibo CMS Server (Docker)
-  - Mailcow Mail Server (Docker)                                            - Xibo Display Players
+  - SRV-DC01-D (Active Directory)      - Client PC-0X-A (Win 11)            - SRV-DC02-M (AD Replicated)
+  - OpenMediaVault NAS (RAID 1)        - Dolibarr ERP Server                - Xibo CMS Server (Docker)
+  - Mailcow Mail Server (Docker)                                            - Store Display Players
 ```
 
 ![Infrastructure Architecture Schema](images/schema-infrastructure.png)
@@ -46,15 +46,15 @@ The entire environment is hosted on a **Proxmox VE** hypervisor running on a phy
 ## 🏗️ 2. Network Architecture & IP Addressing
 
 ### 2.1. Logical VLAN Segmentation (802.1Q)
-| VLAN | Role / Service | Subnet CIDR | Gateway (pfSense) | DHCP Range / Host Pool | Static IP Reservations |
+| VLAN | Role / Service | Subnet CIDR | Gateway (pfSense) | DHCP Range / Pool | Static IP Reservations |
 | :--- | :--- | :--- | :--- | :--- | :--- |
-| **VLAN 10** | Management / Direction | `192.168.10.0/24` | `192.168.10.1` | `192.168.10.10–50` | AD Servers (`.200`), NAS (`.250`), Mail (`.12`) |
-| **VLAN 20** | Repair Workshop | `192.168.20.0/24` | `192.168.20.1` | `192.168.20.10–50` | Dolibarr ERP (`.200`), PC-A Workstations |
+| **VLAN 10** | Management & HR | `192.168.10.0/24` | `192.168.10.1` | `192.168.10.10–50` | AD Servers (`.200`), NAS (`.250`), Mail (`.12`) |
+| **VLAN 20** | Repair Workshop | `192.168.20.0/24` | `192.168.20.1` | `192.168.20.10–50` | Dolibarr ERP Server (`.200`), PC-A Clients |
 | **VLAN 30** | Retail Store & Display | `192.168.30.0/24` | `192.168.30.1` | `192.168.30.10–50` | Secondary AD (`.200`), Xibo Server (`.14`), Players |
 | **VLAN 1** | Management / Admin | `192.168.1.0/24` | `192.168.1.1` | `192.168.1.10–50` | Proxmox VE (`192.168.1.X`), Dell iDRAC |
 
-### 2.2. Servers & Infrastructure Equipment
-| Hostname | OS | IP Address | Services & Roles |
+### 2.2. Key Infrastructure Servers
+| Hostname | Operating System | IP Address | Deployed Roles & Services |
 | :--- | :--- | :--- | :--- |
 | `SRV-DC01-D` | Windows Server 2022 | `192.168.10.200` | Primary Domain Controller, DNS, DFS Root |
 | `SRV-DC02-M` | Windows Server 2022 | `192.168.30.200` | Secondary Domain Controller, AD & DFS Replication |
@@ -66,7 +66,7 @@ The entire environment is hosted on a **Proxmox VE** hypervisor running on a phy
 
 ---
 
-## 🛠️ 3. Detailed Component Deployment & Step-by-Step Configuration
+## 🛠️ 3. Detailed Step-by-Step Configuration
 
 ### 3.1. Virtualization (Proxmox VE) & Firewalling (pfSense)
 
@@ -75,7 +75,7 @@ The entire environment is hosted on a **Proxmox VE** hypervisor running on a phy
 #### Step A: Network Bridges Setup in Proxmox VE
 1. Access Proxmox Web GUI (`https://192.168.1.X:8006`).
 2. Navigate to **Datacenter** > **Proxmox Node** > **System** > **Network**.
-3. Keep `vmbr0` attached to the physical interface `enp4s0` (WAN).
+3. Keep `vmbr0` attached to physical interface `enp4s0` (WAN).
 4. Create Linux Bridge **`vmbr1`** for administration.
 5. Create main trunk bridge **`vmbr2`** (Name: `LAN_VLANs`, check **VLAN aware**).
 6. Click **Apply Configuration**.
@@ -103,11 +103,29 @@ The entire environment is hosted on a **Proxmox VE** hypervisor running on a phy
 1. Install **AD DS** and **DNS** roles on `SRV-DC01-D` and create forest **`sbn.solution`**.
 2. Join `SRV-DC02-M` to domain `sbn.solution` and promote it as replicated domain controller.
 
-![IP Configuration SRV-DC01-D](images/captures/ip-dc01.png)
-![IP Configuration SRV-DC02-M](images/captures/ip-dc02.png)
-![Active Directory Users and Computers Console](images/captures/ad-users-pcs.png)
-![DNS Manager Console](images/captures/dns-manager.png)
-![AD Groups & Memberships](images/captures/ad-groups-omv.png)
+##### Screenshots of IP Configuration & Active Directory:
+| DC01 IP Setup | DC02 IP Setup | AD Users & Computers |
+| :---: | :---: | :---: |
+##### Domain Controllers IP Configuration Captures:
+
+<div align="center">
+
+| SRV-DC01-D (VLAN 10 — Direction) | SRV-DC02-M (VLAN 30 — Store) |
+| :---: | :---: |
+| <img src="images/captures/ip-dc01.png" width="420" alt="IP Config SRV-DC01-D"> | <img src="images/captures/ip-dc02.png" width="420" alt="IP Config SRV-DC02-M"> |
+
+</div>
+
+##### Active Directory, DNS & Groups Console:
+
+![Active Directory Users & Computers Console](images/captures/ad-users-pcs.png)
+
+![DNS Manager & Forward Lookup Zones](images/captures/dns-manager.png)
+
+![Active Directory Groups & Users](images/captures/ad-groups-omv.png)
+
+* DNS Management Console: `![DNS Manager](images/captures/dns-manager.png)`
+* AD Groups & Users Management: `![AD Groups](images/captures/ad-groups-omv.png)`
 
 #### Step B: DFS Namespace & GPO Setup
 1. **DFS (Distributed File System)**:
@@ -115,10 +133,10 @@ The entire environment is hosted on a **Proxmox VE** hypervisor running on a phy
    * Target Folder: `Data` on dedicated drive `S:` (250 GB)
    * Replication Group: `Users-Replication` synchronized between DC01 and DC02.
 
-![DFS Namespaces Console](images/captures/dfs-users.png)
-![DFS Data Namespace Detail](images/captures/dfs-namespace-data.png)
-![DFS Replication Status](images/captures/dfs-replication-status.png)
-![GPO Folder Redirection Policy](images/captures/gpo-redirection.png)
+##### DFS & GPO Redirection Screenshots:
+| DFS Namespace | GPO Folder Redirection |
+| :---: | :---: |
+| ![DFS Users](images/captures/dfs-users.png) | ![GPO Redirection](images/captures/gpo-redirection.png) |
 
 2. **Deployed GPOs**:
    * **Users-Folder-Redirection**: Redirects *Documents, Desktop, Pictures, Downloads* to `\\sbn.solution\Users\Data\%USERNAME%`.
@@ -126,14 +144,17 @@ The entire environment is hosted on a **Proxmox VE** hypervisor running on a phy
    * **NAS-Mapping-D**: Maps drive `D:` (`\\NAS-D\Direction`) for group `Users-D`.
    * **NAS-Mapping-M**: Maps drive `M:` (`\\NAS-D\Magasin`) for group `Users-M`.
 
-#### Step C: Corporate Wallpapers & Customization Policies (GPO Wallpapers)
-To ensure a standardized graphical desktop environment across all workstations, domain Group Policies automatically deploy official branded desktop wallpapers tailored to each department (*Management*, *Repair Workshop*, *Retail Store*).
-
-![Official Desktop Wallpaper - Management Department](images/captures/wallpaper-direction.png)
-![Official Desktop Wallpaper - Repair Workshop](images/captures/wallpaper-atelier.png)
-![Official Desktop Wallpaper - Retail Store & Display](images/captures/wallpaper-magasin.png)
-
 ---
+
+
+
+#### Step C: Departmental Enterprise Wallpapers Deployment (GPO Wallpapers)
+Official SBN Solution Tech wallpapers are automatically deployed via GPO based on the user's department:
+
+![Direction Department Wallpaper](images/captures/wallpaper-direction.png)
+![Repair Workshop Wallpaper](images/captures/wallpaper-atelier.png)
+![Retail Store Wallpaper](images/captures/wallpaper-magasin.png)
+
 
 ### 3.3. Centralized NAS Storage (OpenMediaVault RAID 1)
 
@@ -145,11 +166,12 @@ To ensure a standardized graphical desktop environment across all workstations, 
 2. **Groups & SMB Shares**:
    * Created Groups: `Administrators`, `Users-A` (Workshop), `Users-D` (Management), `Users-M` (Store).
    * Shared Folders: `Atelier`, `Direction`, `Magasin`, `Wallpaper`.
+3. **OMV-Extras Extensions**: Activation of **FileBrowser** and **PhotoPrism**.
 
-![Windows Server Disk Management Console](images/captures/disk-management.png)
-![SMB Shared Directory Structure](images/captures/shared-folders.png)
-![Automated Backup Task Configuration](images/captures/backup-task.png)
-![Task Scheduler Execution History](images/captures/planificateur-tache-history.png)
+##### Disk Management & Scheduled Backup Task Screenshots:
+| Disk Management | Automated Backup Task |
+| :---: | :---: |
+| ![Disk Management](images/captures/disk-management.png) | ![Backup Task](images/captures/backup-task.png) |
 
 ---
 
@@ -165,15 +187,15 @@ To ensure a standardized graphical desktop environment across all workstations, 
 * **Stack**: LAMP (Linux Debian, Apache2, MariaDB, PHP).
 * **Backup**: Automated database dumps sent to OMV NAS `NAS-D`.
 
+![Xibo CMS Dashboard](images/captures/xibo-page.png)
+
 #### C. Digital Signage (Xibo CMS & SFTP)
 * **CMS Host**: `192.168.30.14`
 * **Media Transfer**: SFTP (Port 22) via FileZilla to store displays.
 
-![Xibo CMS Web Interface & Dashboard](images/captures/xibo-page.png)
-
 ---
 
-## 🔒 Backup Strategy & Security Policies
+## 🔒 4. Backup Strategy & Security Policies
 
 * **Perimeter Security**: Strict inter-VLAN filtering on pfSense with default-deny policy.
 * **Backup Policy**: Daily incremental exports of databases and shares to OpenMediaVault RAID 1.
@@ -181,6 +203,6 @@ To ensure a standardized graphical desktop environment across all workstations, 
 
 ---
 
-## 🎓 Academic Framework & Credits
+## 🎓 5. Academic Framework & Credits
 
-Project completed by **Nithilan SHUBASKARAN** as part of the **BTS Services Informatiques aux Organisations (SIO) - SISR Option** (2024–2026 Session).
+Project completed as part of the **BTS Services Informatiques aux Organisations (SIO) - SISR Option** (2024–2026 Session).

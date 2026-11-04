@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="images/logo-sbn.png" width="220" alt="Logo SBN Solution Tech">
+  <img src="images/logo-sbn.png" width="220" alt="SBN Solution Tech Logo">
 </p>
 
 # 🚀 Infrastructure Réseau & Services Virtuels — SBN Solution Tech
@@ -103,11 +103,23 @@ L'ensemble de l'environnement est virtualisé sur la plateforme **Proxmox VE** h
 1. Installez le rôle **AD DS** et **DNS** sur `SRV-DC01-D` et créez la forêt **`sbn.solution`**.
 2. Joignez le serveur secondaire `SRV-DC02-M` au domaine `sbn.solution` et promouvez-le en contrôleur de domaine répliqué.
 
-![Configuration IP SRV-DC01-D](images/captures/ip-dc01.png)
-![Configuration IP SRV-DC02-M](images/captures/ip-dc02.png)
-![Utilisateurs et Ordinateurs Active Directory](images/captures/ad-users-pcs.png)
-![Gestionnaire DNS et Zones de Recherche](images/captures/dns-manager.png)
-![Groupes Active Directory et Membres](images/captures/ad-groups-omv.png)
+##### Captures de Configuration IP des Contrôleurs de Domaine :
+
+<div align="center">
+
+| SRV-DC01-D (VLAN 10 — Direction) | SRV-DC02-M (VLAN 30 — Magasin) |
+| :---: | :---: |
+| <img src="images/captures/ip-dc01.png" width="420" alt="Configuration IP SRV-DC01-D"> | <img src="images/captures/ip-dc02.png" width="420" alt="Configuration IP SRV-DC02-M"> |
+
+</div>
+
+##### Console Active Directory, DNS & Groupes :
+
+![Console Utilisateurs & Ordinateurs Active Directory](images/captures/ad-users-pcs.png)
+
+![Gestionnaire DNS & Zones de Recherche Directe](images/captures/dns-manager.png)
+
+![Groupes & Utilisateurs Active Directory](images/captures/ad-groups-omv.png)
 
 #### Étape B : Configuration du DFS & Stratégies de Groupe (GPO)
 1. **DFS (Distributed File System)** :
@@ -115,10 +127,10 @@ L'ensemble de l'environnement est virtualisé sur la plateforme **Proxmox VE** h
    * Dossier cible : `Data` sur disque dédié `S:` (250 Go)
    * Groupe de réplication : `Users-Replication` synchronisé entre DC01 et DC02.
 
-![Espaces de Noms DFS](images/captures/dfs-users.png)
-![Espaces de Noms DFS Data](images/captures/dfs-namespace-data.png)
-![Statut de Réplication DFS](images/captures/dfs-replication-status.png)
-![Stratégie GPO Redirection de Dossiers](images/captures/gpo-redirection.png)
+##### Captures DFS & Redirection GPO :
+| Espace de Noms DFS | Redirection de Dossiers GPO |
+| :---: | :---: |
+| ![DFS Users](images/captures/dfs-users.png) | ![GPO Redirection](images/captures/gpo-redirection.png) |
 
 2. **GPOs Déployées** :
    * **Redirections-Dossiers-Users** : Redirige *Documents, Bureau, Images, Téléchargements* vers `\\sbn.solution\Users\Data\%USERNAME%`.
@@ -126,14 +138,17 @@ L'ensemble de l'environnement est virtualisé sur la plateforme **Proxmox VE** h
    * **NAS-Mapping-D** : Mappe le lecteur `D:` (`\\NAS-D\Direction`) pour le groupe `Users-D`.
    * **NAS-Mapping-M** : Mappe le lecteur `M:` (`\\NAS-D\Magasin`) pour le groupe `Users-M`.
 
-#### Étape C : Stratégies de Personnalisation & Fond d'Écran d'Entreprise (GPO Wallpapers)
-Afin d'uniformiser l'environnement graphique des postes de travail et de renforcer l'identité visuelle de **SBN Solution Tech**, des stratégies de groupe (GPO) déploient automatiquement les fonds d'écran officiels selon le service de l'utilisateur (*Direction*, *Atelier*, *Magasin*).
-
-![Fond d'Écran Officiel - Service Direction](images/captures/wallpaper-direction.png)
-![Fond d'Écran Officiel - Service Atelier de Réparation](images/captures/wallpaper-atelier.png)
-![Fond d'Écran Officiel - Service Magasin & Vitrine](images/captures/wallpaper-magasin.png)
-
 ---
+
+
+
+#### Étape C : Personnalisation & Fonds d'Écran d'Entreprise par Service (GPO Wallpapers)
+Les fonds d'écran officiels SBN Solution Tech sont appliqués automatiquement par GPO selon le département de l'utilisateur :
+
+![Fond d'écran Direction](images/captures/wallpaper-direction.png)
+![Fond d'écran Atelier](images/captures/wallpaper-atelier.png)
+![Fond d'écran Magasin](images/captures/wallpaper-magasin.png)
+
 
 ### 3.3. NAS OpenMediaVault (RAID 1 & Partages SMB)
 
@@ -147,11 +162,10 @@ Afin d'uniformiser l'environnement graphique des postes de travail et de renforc
    * Dossiers partagés : `Atelier`, `Direction`, `Magasin`, `Wallpaper`.
 3. **Extensions OMV-Extras** : Activation de **FileBrowser** et **PhotoPrism**.
 
-![Gestion des Disques Windows Server](images/captures/disk-management.png)
-![Arborescence du Dossier Partagé Users Data](images/captures/dossier-partage-users-data.png)
-![Dossiers Partagés SMB sur le Réseau](images/captures/shared-folders.png)
-![Tâche Planifiée de Sauvegarde Automatisée](images/captures/backup-task.png)
-![Historique du Planificateur de Tâches](images/captures/planificateur-tache-history.png)
+##### Captures de Gestion des Disques & Tâches de Sauvegarde Automatisées :
+| Gestion des Disques | Tâche Planifiée de Sauvegarde |
+| :---: | :---: |
+| ![Gestion des Disques](images/captures/disk-management.png) | ![Backup Task](images/captures/backup-task.png) |
 
 ---
 
@@ -203,7 +217,7 @@ crontab -e
 
 ---
 
-### 3.6. Affichage Dynamique Xibo CMS & Transfert SFTP FileZilla
+### 3.6. Affichage Dynamique Xibo & Transfert SFTP FileZilla
 
 #### Déploiement de Xibo CMS sous Docker :
 ```bash
@@ -215,11 +229,11 @@ nano config.env  # Configurer MYSQL_PASSWORD
 docker compose up -d
 ```
 
-![Interface Web et Tableau de Bord Xibo CMS](images/captures/xibo-page.png)
+![Tableau de bord Xibo CMS](images/captures/xibo-page.png)
 
 #### Connexion SFTP FileZilla pour le transfert de médias :
 * **Hôte** : `192.168.30.14` (Serveur Xibo CMS)
-* **Protocole** : SFTP (SSH)
+* **Protocol** : SFTP (SSH)
 * **Port** : `22`
 * **Utilisateur** : `xibo`
 
@@ -229,10 +243,10 @@ docker compose up -d
 
 * **Sécurité Périmétrique** : Filtrage strict inter-VLAN sur pfSense avec politique de déni par défaut.
 * **Politique de Sauvegarde** : Exportation quotidienne incrémentale des bases de données et dossiers vers le volume RAID 1 d'OpenMediaVault.
-* **Haute Disponibilité** : Tolérance aux pannes matérielles (RAID 1), réplication de domaine AD DS et synchronisation DFS-R.
+* **Haute Disponibilité** : Tolérance aux pannes matérielles (RAID 1), réplication de domaine AD DS et synchronisation DFS.
 
 ---
 
 ## 🎓 5. Cadre Académique & Crédits
 
-Projet d'Épreuve Technique réalisé par **Nithilan SHUBASKARAN** dans le cadre du **BTS Services Informatiques aux Organisations (SIO) - Option SISR** (Session 2024–2026).
+Projet d'Épreuve Technique réalisé dans le cadre du **BTS Services Informatiques aux Organisations (SIO) - Option SISR** (Session 2024–2026).
