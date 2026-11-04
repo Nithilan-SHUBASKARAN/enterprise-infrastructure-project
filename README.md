@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="images/logo-sbn.png" width="250" alt="Logo SBN Solution Tech">
+  <img src="images/logo-sbn.png" width="220" alt="Logo SBN Solution Tech">
 </p>
 
 # 🚀 Infrastructure Réseau & Services Virtuels — SBN Solution Tech
@@ -39,7 +39,9 @@ L'ensemble de l'environnement est virtualisé sur la plateforme **Proxmox VE** h
   - Mailcow Mail Server (Docker)                                            - Players Xibo Vitrine
 ```
 
-![Schéma Logique de l'Infrastructure](images/schema-infrastructure.png)
+<p align="center">
+  <img src="images/schema-infrastructure.png" width="850" alt="Schéma Logique de l'Infrastructure">
+</p>
 
 ---
 
@@ -70,7 +72,9 @@ L'ensemble de l'environnement est virtualisé sur la plateforme **Proxmox VE** h
 
 ### 3.1. Virtualisation Proxmox VE & Routage pfSense
 
-![Architecture de Routage et Filtrage pfSense](images/pfsense-routing.png)
+<p align="center">
+  <img src="images/pfsense-routing.png" width="850" alt="Architecture de Routage et Filtrage pfSense">
+</p>
 
 #### Étape A : Configuration des Bridges Réseau sous Proxmox VE
 1. Accédez à l'interface web Proxmox (`https://192.168.1.X:8006`).
@@ -97,29 +101,29 @@ L'ensemble de l'environnement est virtualisé sur la plateforme **Proxmox VE** h
 
 ### 3.2. Active Directory, DFS & Stratégies de Groupe (GPO)
 
-![Architecture Active Directory & DFS](images/ad-dfs-architecture.png)
+<p align="center">
+  <img src="images/ad-dfs-architecture.png" width="750" alt="Architecture Active Directory & DFS">
+</p>
 
 #### Étape A : Déploiement et Réplication des Contrôleurs de Domaine
 1. Installez le rôle **AD DS** et **DNS** sur `SRV-DC01-D` et créez la forêt **`sbn.solution`**.
 2. Joignez le serveur secondaire `SRV-DC02-M` au domaine `sbn.solution` et promouvez-le en contrôleur de domaine répliqué.
 
-##### Configuration IP des Contrôleurs de Domaine (Côte à côte) :
-
-<div align="center">
-
+##### Captures de configuration IP (Côte à côte, format compact 700x800) :
 | SRV-DC01-D (VLAN 10 — Direction) | SRV-DC02-M (VLAN 30 — Magasin) |
 | :---: | :---: |
 | <img src="images/captures/ip-dc01.png" width="420" alt="Configuration IP SRV-DC01-D"> | <img src="images/captures/ip-dc02.png" width="420" alt="Configuration IP SRV-DC02-M"> |
 
-</div>
-
 ##### Console Active Directory, DNS & Groupes :
 
+**Console Utilisateurs et Ordinateurs Active Directory** :
 ![Console Utilisateurs & Ordinateurs Active Directory](images/captures/ad-users-pcs.png)
 
+**Gestionnaire DNS & Zones de Recherche Directe** :
 ![Gestionnaire DNS & Zones de Recherche Directe](images/captures/dns-manager.png)
 
-![Gestion des Groupes & Utilisateurs AD](images/captures/Utilisateurs-Groupes.png)
+**Gestion des Groupes & Utilisateurs AD / OMV** :
+![Gestion des Groupes & Utilisateurs AD](images/captures/ad-groups-omv.png)
 
 #### Étape B : Configuration du DFS & Stratégies de Groupe (GPO)
 1. **DFS (Distributed File System)** :
@@ -141,25 +145,26 @@ L'ensemble de l'environnement est virtualisé sur la plateforme **Proxmox VE** h
    * **NAS-Mapping-D** : Mappe le lecteur `D:` (`\\NAS-D\Direction`) pour le groupe `Users-D`.
    * **NAS-Mapping-M** : Mappe le lecteur `M:` (`\\NAS-D\Magasin`) pour le groupe `Users-M`.
 
----
-
 #### Étape C : Stratégies de Personnalisation & Fond d'Écran d'Entreprise (GPO Wallpapers)
-Les fonds d'écran de session sont automatiquement appliqués par GPO selon le département de l'utilisateur :
 
-**Fond d'écran — Direction & Comptabilité** :
-![Wallpaper Direction](images/captures/wallpaper-direction.png)
+Application automatique du fond d'écran d'entreprise adapté à chaque service via GPO :
 
-**Fond d'écran — Atelier de Réparation** :
-![Wallpaper Atelier](images/captures/wallpaper-atelier.png)
+**Fond d'écran — Service Direction (`wallpaper-direction.png`)** :
+![Fond d'écran Direction](images/captures/wallpaper-direction.png)
 
-**Fond d'écran — Magasin & Caisse** :
-![Wallpaper Magasin](images/captures/wallpaper-magasin.png)
+**Fond d'écran — Service Atelier (`wallpaper-atelier.png`)** :
+![Fond d'écran Atelier](images/captures/wallpaper-atelier.png)
+
+**Fond d'écran — Service Magasin (`wallpaper-magasin.png`)** :
+![Fond d'écran Magasin](images/captures/wallpaper-magasin.png)
 
 ---
 
 ### 3.3. NAS OpenMediaVault (RAID 1 & Partages SMB)
 
-![Architecture de Stockage OpenMediaVault NAS RAID 1](images/omv-storage-raid.png)
+<p align="center">
+  <img src="images/omv-storage-raid.png" width="850" alt="Architecture de Stockage OpenMediaVault NAS RAID 1">
+</p>
 
 1. **Architecture Disque** :
    * Disque Système : `/dev/sdb` (64 Go).
@@ -170,15 +175,20 @@ Les fonds d'écran de session sont automatiquement appliqués par GPO selon le d
 3. **Extensions OMV-Extras** : Activation de **FileBrowser** et **PhotoPrism**.
 
 ##### Captures de Gestion des Disques & Tâches de Sauvegarde Automatisées :
-| Gestion des Disques | Tâche Planifiée de Sauvegarde |
-| :---: | :---: |
-| ![Gestion des Disques](images/captures/Disques.png) | ![Backup Task](images/captures/backup-task.png) |
+
+**Gestion des Disques et Partitions** :
+![Gestion des Disques](images/captures/Disques.png)
+
+**Tâche Planifiée de Sauvegarde Automatique** :
+![Backup Task](images/captures/backup-task.png)
 
 ---
 
 ### 3.4. Services Applicatifs Docker (Mailcow, Dolibarr, Xibo)
 
-![Architecture des Conteneurs Docker](images/docker-services.png)
+<p align="center">
+  <img src="images/docker-services.png" width="850" alt="Architecture des Conteneurs Docker">
+</p>
 
 #### A. Messagerie Unifiée Mailcow (Docker & LDAP)
 
@@ -224,11 +234,7 @@ crontab -e
 
 ---
 
-### 3.6. Affichage Dynamique Xibo
-
-##### Interface de Gestion Xibo CMS :
-![Tableau de Bord Xibo CMS](images/captures/xibo-page.png)
- & Transfert SFTP FileZilla
+### 3.6. Affichage Dynamique Xibo & Transfert SFTP FileZilla
 
 #### Déploiement de Xibo CMS sous Docker :
 ```bash
@@ -239,6 +245,9 @@ cp config.env.template config.env
 nano config.env  # Configurer MYSQL_PASSWORD
 docker compose up -d
 ```
+
+**Interface Web & Administration Xibo CMS (`xibo-page.png`)** :
+![Xibo CMS Interface Web](images/captures/xibo-page.png)
 
 #### Connexion SFTP FileZilla pour le transfert de médias :
 * **Hôte** : `192.168.30.14` (Serveur Xibo CMS)
@@ -253,9 +262,11 @@ docker compose up -d
 * **Sécurité Périmétrique** : Filtrage strict inter-VLAN sur pfSense avec politique de déni par défaut.
 * **Politique de Sauvegarde** : Exportation quotidienne incrémentale des bases de données et dossiers vers le volume RAID 1 d'OpenMediaVault.
 * **Haute Disponibilité** : Tolérance aux pannes matérielles (RAID 1), réplication de domaine AD DS et synchronisation DFS.
+* **Confidentialité & RGPD** : Protection des données clients et respect du principe du moindre privilège.
+* **Charte Informatique** : Définition des règles d'utilisation des comptes, de la sécurité des mots de passe et engagements de confidentialité.
 
 ---
 
 ## 🎓 5. Cadre Académique & Crédits
 
-Projet d'Épreuve Technique réalisé dans le cadre du **BTS Services Informatiques aux Organisations (SIO) - Option SISR** (Session 2024–2026).
+Projet d'Épreuve Technique réalisé par **Nithilan SHUBASKARAN** dans le cadre du **BTS Services Informatiques aux Organisations (SIO) - Option SISR** (Session 2024–2026).
