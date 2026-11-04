@@ -1,7 +1,3 @@
-<p align="center">
-  <img src="images/logo-sbn.png" width="220" alt="Logo SBN Solution Tech">
-</p>
-
 # 🚀 Enterprise Network & Virtualized Infrastructure — SBN Solution Tech
 
 > **Technical Exam Project — BTS SIO (IT Services for Organizations) SISR Option (2024–2026 Session)**  
@@ -127,15 +123,6 @@ The entire environment is hosted on a **Proxmox VE** hypervisor running on a phy
    * **NAS-Mapping-A**: Maps drive `A:` (`\\NAS-D\Atelier`) for group `Users-A`.
    * **NAS-Mapping-D**: Maps drive `D:` (`\\NAS-D\Direction`) for group `Users-D`.
    * **NAS-Mapping-M**: Maps drive `M:` (`\\NAS-D\Magasin`) for group `Users-M`.
-
----
-
-#### Step C: Personalization Policies & Enterprise Wallpapers (GPO Wallpapers)
-Official enterprise wallpapers customized per department and automatically deployed via GPO:
-
-![Direction Department Wallpaper](images/captures/wallpaper-direction.png)
-![Workshop Department Wallpaper](images/captures/wallpaper-atelier.png)
-![Store Department Wallpaper](images/captures/wallpaper-magasin.png)
 
 ---
 

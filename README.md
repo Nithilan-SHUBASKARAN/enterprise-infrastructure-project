@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="images/logo-sbn.png" width="220" alt="Logo SBN Solution Tech">
+  <img src="images/logo-sbn.png" width="250" alt="Logo SBN Solution Tech">
 </p>
 
 # 🚀 Infrastructure Réseau & Services Virtuels — SBN Solution Tech
@@ -103,7 +103,7 @@ L'ensemble de l'environnement est virtualisé sur la plateforme **Proxmox VE** h
 1. Installez le rôle **AD DS** et **DNS** sur `SRV-DC01-D` et créez la forêt **`sbn.solution`**.
 2. Joignez le serveur secondaire `SRV-DC02-M` au domaine `sbn.solution` et promouvez-le en contrôleur de domaine répliqué.
 
-##### Captures de configuration IP (Côte à côte) :
+##### Configuration IP des Contrôleurs de Domaine (Côte à côte) :
 
 <div align="center">
 
@@ -113,11 +113,13 @@ L'ensemble de l'environnement est virtualisé sur la plateforme **Proxmox VE** h
 
 </div>
 
-##### Console Utilisateurs & Ordinateurs Active Directory :
-![Console Utilisateurs et Ordinateurs Active Directory](images/captures/ad-users-pcs.png)
+##### Console Active Directory, DNS & Groupes :
 
-* Console DNS & Résolution de Noms : `![DNS Manager](images/captures/dns-manager.png)`
-* Gestion des Groupes & Utilisateurs AD : `![Groupes AD](images/captures/Utilisateurs-Groupes.png)`
+![Console Utilisateurs & Ordinateurs Active Directory](images/captures/ad-users-pcs.png)
+
+![Gestionnaire DNS & Zones de Recherche Directe](images/captures/dns-manager.png)
+
+![Gestion des Groupes & Utilisateurs AD](images/captures/Utilisateurs-Groupes.png)
 
 #### Étape B : Configuration du DFS & Stratégies de Groupe (GPO)
 1. **DFS (Distributed File System)** :
@@ -125,10 +127,13 @@ L'ensemble de l'environnement est virtualisé sur la plateforme **Proxmox VE** h
    * Dossier cible : `Data` sur disque dédié `S:` (250 Go)
    * Groupe de réplication : `Users-Replication` synchronisé entre DC01 et DC02.
 
-##### Captures DFS & Redirection GPO :
-| Espace de Noms DFS | Redirection de Dossiers GPO |
-| :---: | :---: |
-| ![DFS Users](images/captures/dfs-users.png) | ![GPO Redirection](images/captures/gpo-redirection.png) |
+##### Captures DFS & Redirection GPO (Affichage vertical grand format) :
+
+**Espace de Noms & Racine DFS (`\\sbn.solution\Users`)** :
+![Espace de Noms DFS](images/captures/dfs-users.png)
+
+**Stratégie de Groupe — Redirection des Dossiers Utilisateurs (GPO)** :
+![Redirection de Dossiers GPO](images/captures/gpo-redirection.png)
 
 2. **GPOs Déployées** :
    * **Redirections-Dossiers-Users** : Redirige *Documents, Bureau, Images, Téléchargements* vers `\\sbn.solution\Users\Data\%USERNAME%`.
@@ -139,11 +144,16 @@ L'ensemble de l'environnement est virtualisé sur la plateforme **Proxmox VE** h
 ---
 
 #### Étape C : Stratégies de Personnalisation & Fond d'Écran d'Entreprise (GPO Wallpapers)
-Les fonds d'écran officiels ont été personnalisés par service et déployés automatiquement via GPO :
+Les fonds d'écran de session sont automatiquement appliqués par GPO selon le département de l'utilisateur :
 
-![Fond d'écran Direction](images/captures/wallpaper-direction.png)
-![Fond d'écran Atelier](images/captures/wallpaper-atelier.png)
-![Fond d'écran Magasin](images/captures/wallpaper-magasin.png)
+**Fond d'écran — Direction & Comptabilité** :
+![Wallpaper Direction](images/captures/wallpaper-direction.png)
+
+**Fond d'écran — Atelier de Réparation** :
+![Wallpaper Atelier](images/captures/wallpaper-atelier.png)
+
+**Fond d'écran — Magasin & Caisse** :
+![Wallpaper Magasin](images/captures/wallpaper-magasin.png)
 
 ---
 
@@ -214,7 +224,11 @@ crontab -e
 
 ---
 
-### 3.6. Affichage Dynamique Xibo & Transfert SFTP FileZilla
+### 3.6. Affichage Dynamique Xibo
+
+##### Interface de Gestion Xibo CMS :
+![Tableau de Bord Xibo CMS](images/captures/xibo-page.png)
+ & Transfert SFTP FileZilla
 
 #### Déploiement de Xibo CMS sous Docker :
 ```bash
@@ -231,11 +245,6 @@ docker compose up -d
 * **Protocol** : SFTP (SSH)
 * **Port** : `22`
 * **Utilisateur** : `xibo`
-
----
-
-#### Tableau de Bord Xibo CMS :
-![Interface Web Xibo CMS Dashboard](images/captures/xibo-page.png)
 
 ---
 
