@@ -7,7 +7,6 @@
 
 🌐 **Langues / Languages** : [Français](README.md) | [English](README_EN.md)
 
-
 ## 📋 1. Présentation Générale de l'Entreprise & du Projet
 
 **SBN Solution Tech** est une société spécialisée dans la vente et la réparation de matériel informatique haut de gamme. Pour répondre aux besoins de la direction, de l'atelier de réparation et du magasin, une infrastructure informatique d'entreprise complète, 100 % virtualisée et hautement disponible a été conçue.
@@ -58,8 +57,6 @@ L'ensemble de l'environnement est virtualisé sur la plateforme **Proxmox VE** h
 | `SRV-XIBO-M` | Ubuntu Server 22.04 / Docker | `192.168.30.14` | Serveur d'Affichage Dynamique Xibo CMS & SFTP |
 | `Player-XIBO0X` | Windows 11 Pro | DHCP (VLAN 30) | Écrans d'affichage en vitrine avec Xibo Player |
 
-*📌 [Gestionnaire DNS et adresses IP]*
-
 ---
 
 ## 🛠️ 3. Guide de Déploiement Étape par Étape
@@ -75,8 +72,6 @@ L'ensemble de l'environnement est virtualisé sur la plateforme **Proxmox VE** h
 4. Créez un bridge d'administration **`vmbr1`** (Linux Bridge, Autostart coché).
 5. Créez le bridge principal des VLANs **`vmbr2`** (Nom : `LAN_VLANs`, cocher **VLAN aware**).
 6. Cliquez sur **Apply Configuration**.
-
-*📌 [Création de Linux Bridge dans Proxmox]*
 
 *Remarque technique : En cas de changement de carte MAC sous Proxmox 7/8, modifiez le fichier d'interface de l'hôte :*
 ```bash
@@ -97,8 +92,6 @@ nano /etc/network/interfaces
 3. **Règles Pare-feu (Firewall Rules)** :
    * Bloquer par défaut le flux inter-VLAN.
    * Autoriser spécifiquement les flux AD entre VLAN 10 et 30 (`LDAP 389/636`, `Kerberos 88`, `RPC 135`, `DNS 53`).
-
-*📌 [Configuration des VLANs sur pfSense]*
 
 ---
 
@@ -121,9 +114,6 @@ nano /etc/network/interfaces
    * **NAS-Mapping-D** : Mappe le lecteur `D:` (`\\NAS-D\Direction`) pour le groupe `Users-D`.
    * **NAS-Mapping-M** : Mappe le lecteur `M:` (`\\NAS-D\Magasin`) pour le groupe `Users-M`.
 
-*📌 [Éditeur de Gestion des GPO - Mappage de Lecteurs]*
-*📌 [Redirection de dossiers utilisateurs]*
-
 ---
 
 ### 3.3. NAS OpenMediaVault (RAID 1 & Partages SMB)
@@ -137,9 +127,6 @@ nano /etc/network/interfaces
    * Groupes créés : `Administrators`, `Users-A` (Atelier), `Users-D` (Direction), `Users-M` (Magasin).
    * Dossiers partagés : `Atelier`, `Direction`, `Magasin`, `Wallpaper`.
 3. **Extensions OMV-Extras** : Activation de **FileBrowser** et **PhotoPrism**.
-
-*📌 [Tableau de bord OpenMediaVault et Disques RAID 1]*
-*📌 [Permissions des Dossiers Partagés OMV]*
 
 ---
 
@@ -181,8 +168,6 @@ crontab -e
 * * * * * cd /opt/mailcow-dockerized && /usr/bin/docker compose exec -T php-fpm-mailcow php /web/inc/scripts/ldap_sync.php > /dev/null 2>&1
 ```
 
-*📌 [Interface d'Administration Mailcow UI]*
-
 ---
 
 ### 3.5. ERP / CRM Dolibarr
@@ -190,8 +175,6 @@ crontab -e
 1. **Stack Web** : Linux Debian, Apache2, PHP, MariaDB.
 2. **Fonctionnalités** : Suivi commercial, gestion des stocks et de la facturation.
 3. **Partage SMB & Sauvegardes** : Intégration de Samba pour les pièces jointes et script de dump automatisé de la base MariaDB vers le NAS `NAS-D`.
-
-*📌 [Interface de gestion Dolibarr]*
 
 ---
 
@@ -212,9 +195,6 @@ docker compose up -d
 * **Protocol** : SFTP (SSH)
 * **Port** : `22`
 * **Utilisateur** : `xibo`
-
-*📌 [Tableau de bord Xibo CMS et Players]*
-*📌 [Transfert SFTP via FileZilla]*
 
 ---
 

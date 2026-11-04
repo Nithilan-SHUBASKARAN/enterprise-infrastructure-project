@@ -49,8 +49,6 @@ The entire environment is hosted on a **Proxmox VE** hypervisor running on a phy
   * Strict isolation between Store (VLAN 30) and Management (VLAN 10).
   * Allowed ports: `53` (DNS), `88` (Kerberos), `445/139` (SMB), `80/443` (HTTP/HTTPS).
 
-*📌 [pfSense Firewall Rules Configuration]*
-
 ---
 
 ### 2. Active Directory Domain Services & Windows Server Infrastructure
@@ -65,9 +63,6 @@ The entire environment is hosted on a **Proxmox VE** hypervisor running on a phy
   * `GPO-Folder-Redirection`: Automatic redirection of *Desktop, Documents, Downloads, Pictures*.
   * `GPO-Drive-Mapping`: Automatic mapping of `A:` (Atelier), `D:` (Direction), `M:` (Magasin).
 
-*📌 [Active Directory Users and Computers]*
-*📌 [DFS Management and Replication Status]*
-
 ---
 
 ### 3. Centralized NAS Storage (OpenMediaVault RAID 1)
@@ -79,8 +74,6 @@ The entire environment is hosted on a **Proxmox VE** hypervisor running on a phy
   * Share `/srv/dev-disk-by-uuid/Magasin` -> Group `Users-M` (Read/Write)
   * Share `/srv/dev-disk-by-uuid/Wallpaper` -> Group `Domain Users` (Read-Only)
 
-*📌 [OpenMediaVault RAID 1 Storage Status]*
-
 ---
 
 ### 4. Containerized Unified Messaging (Mailcow Dockerized)
@@ -89,8 +82,6 @@ The entire environment is hosted on a **Proxmox VE** hypervisor running on a phy
 * **FQDN & Services**: `mail.sbn.solution` hosting Webmail (SOGo), Postfix SMTP, Dovecot IMAP, Rspamd.
 * **Active Directory Integration**: LDAP sync configuration for central user authentication.
 
-*📌 [Mailcow Admin UI & Sync Status]*
-
 ---
 
 ### 5. Enterprise ERP / CRM (Dolibarr) & Shared Storage
@@ -98,16 +89,12 @@ The entire environment is hosted on a **Proxmox VE** hypervisor running on a phy
 * **LAMP Stack**: Apache2, MariaDB Server, PHP 8.2.
 * **Functionality**: Customer relationships, invoicing, inventory tracking, repair job work-orders.
 
-*📌 [Dolibarr ERP Dashboard]*
-
 ---
 
 ### 6. Digital Signage (Xibo CMS)
 * **Server Deployment**: Xibo CMS inside Docker container on Ubuntu Server (`192.168.30.14`).
 * **Media Transfer**: SFTP access (Port 22) via FileZilla for marketing media uploads.
 * **Client Display**: Windows/Linux Xibo Player connected to Store display monitors.
-
-*📌 [Xibo Digital Signage Layout Manager]*
 
 ---
 
