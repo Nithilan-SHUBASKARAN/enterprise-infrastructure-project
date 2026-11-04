@@ -35,7 +35,7 @@ L'ensemble de l'environnement est virtualisé sur la plateforme **Proxmox VE** h
   - Mailcow Mail Server (Docker)                                            - Players Xibo Vitrine
 ```
 
-![Schéma Logique de l'Infrastructure](images/schema-infrastructure.png)
+<p align="center"><img src="images/schema-infrastructure.png" width="850" alt="Schéma Logique de l'Infrastructure"></p>
 
 ---
 
@@ -66,7 +66,7 @@ L'ensemble de l'environnement est virtualisé sur la plateforme **Proxmox VE** h
 
 ### 3.1. Virtualisation Proxmox VE & Routage pfSense
 
-![Architecture de Routage et Filtrage pfSense](images/pfsense-routing.png)
+<p align="center"><img src="images/pfsense-routing.png" width="850" alt="Routage et Filtrage pfSense"></p>
 
 #### Étape A : Configuration des Bridges Réseau sous Proxmox VE
 1. Accédez à l'interface web Proxmox (`https://192.168.1.X:8006`).
@@ -93,7 +93,7 @@ L'ensemble de l'environnement est virtualisé sur la plateforme **Proxmox VE** h
 
 ### 3.2. Active Directory, DFS & Stratégies de Groupe (GPO)
 
-![Architecture Active Directory & DFS](images/ad-dfs-architecture.png)
+<p align="center"><img src="images/ad-dfs-architecture.png" width="850" alt="Active Directory & DFS"></p>
 
 #### Étape A : Déploiement et Réplication des Contrôleurs de Domaine
 1. Installez le rôle **AD DS** et **DNS** sur `SRV-DC01-D` et créez la forêt **`sbn.solution`**.
@@ -128,7 +128,7 @@ L'ensemble de l'environnement est virtualisé sur la plateforme **Proxmox VE** h
 
 ### 3.3. NAS OpenMediaVault (RAID 1 & Partages SMB)
 
-![Architecture de Stockage OpenMediaVault NAS RAID 1](images/omv-storage-raid.png)
+<p align="center"><img src="images/omv-storage-raid.png" width="850" alt="Stockage OpenMediaVault RAID 1"></p>
 
 1. **Architecture Disque** :
    * Disque Système : `/dev/sdb` (64 Go).
@@ -147,7 +147,7 @@ L'ensemble de l'environnement est virtualisé sur la plateforme **Proxmox VE** h
 
 ### 3.4. Services Applicatifs Docker (Mailcow, Dolibarr, Xibo)
 
-![Architecture des Conteneurs Docker](images/docker-services.png)
+<p align="center"><img src="images/docker-services.png" width="850" alt="Conteneurs Docker"></p>
 
 #### A. Messagerie Unifiée Mailcow (Docker & LDAP)
 

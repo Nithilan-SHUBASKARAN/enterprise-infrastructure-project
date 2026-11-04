@@ -35,7 +35,7 @@ The entire environment is hosted on a **Proxmox VE** hypervisor running on a phy
   - Mailcow Mail Server (Docker)                                            - Store Display Players
 ```
 
-![Infrastructure Architecture Schema](images/schema-infrastructure.png)
+<p align="center"><img src="images/schema-infrastructure.png" width="850" alt="Infrastructure Architecture Schema"></p>
 
 ---
 
@@ -66,7 +66,7 @@ The entire environment is hosted on a **Proxmox VE** hypervisor running on a phy
 
 ### 3.1. Virtualization (Proxmox VE) & Firewalling (pfSense)
 
-![pfSense Routing and Firewall Architecture](images/pfsense-routing.png)
+<p align="center"><img src="images/pfsense-routing.png" width="850" alt="pfSense Routing and Firewall Architecture"></p>
 
 #### Step A: Network Bridges Setup in Proxmox VE
 1. Access Proxmox Web GUI (`https://192.168.1.X:8006`).
@@ -93,7 +93,7 @@ The entire environment is hosted on a **Proxmox VE** hypervisor running on a phy
 
 ### 3.2. Active Directory Domain Services, DFS & Group Policies (GPO)
 
-![Active Directory & DFS Architecture](images/ad-dfs-architecture.png)
+<p align="center"><img src="images/ad-dfs-architecture.png" width="850" alt="Active Directory & DFS Architecture"></p>
 
 #### Step A: Domain Controllers Deployment & Replication
 1. Install **AD DS** and **DNS** roles on `SRV-DC01-D` and create forest **`sbn.solution`**.
@@ -128,7 +128,7 @@ The entire environment is hosted on a **Proxmox VE** hypervisor running on a phy
 
 ### 3.3. Centralized NAS Storage (OpenMediaVault RAID 1)
 
-![OpenMediaVault RAID 1 Storage Architecture](images/omv-storage-raid.png)
+<p align="center"><img src="images/omv-storage-raid.png" width="850" alt="OpenMediaVault RAID 1 Storage Architecture"></p>
 
 1. **Disk Layout**:
    * System Disk: `/dev/sdb` (64 GB).
@@ -147,7 +147,7 @@ The entire environment is hosted on a **Proxmox VE** hypervisor running on a phy
 
 ### 3.4. Containerized Application Services (Mailcow, Dolibarr, Xibo)
 
-![Docker Container Services Architecture](images/docker-services.png)
+<p align="center"><img src="images/docker-services.png" width="850" alt="Docker Container Services Architecture"></p>
 
 #### A. Unified Email Suite (Mailcow Dockerized)
 * **FQDN**: `mail.sbn.solution`
