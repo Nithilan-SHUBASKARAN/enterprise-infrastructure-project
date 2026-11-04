@@ -1,7 +1,7 @@
-# 🚀 Documentation Technique d'Infrastructure & Services Virtuels — SBN Solution Tech
+# 🚀 Infrastructure Réseau & Services Virtuels — SBN Solution Tech
 
-> **Projet d'Épreuve Technique — BTS SIO (Services Informatiques aux Organisations) Option SISR**  
-> *Guide de déploiement pas à pas, procédures d'installation, architectures réseau, configurations système et schémas.*
+> **Projet d'Épreuve Technique — BTS SIO (Services Informatiques aux Organisations) Option SISR (Session 2024–2026)**  
+> *Documentation technique d'architecture réseau, de virtualisation Proxmox VE et de déploiement de services d'entreprise.*
 
 ---
 
@@ -11,7 +11,7 @@
 
 ## 📋 1. Présentation Générale de l'Entreprise & du Projet
 
-**SBN Solution Tech** est une société spécialisée dans la vente et la réparation de matériel informatique haut de gamme. Pour répondre aux besoins de la direction, de l'atelier de réparation et du magasin, une infrastructure informatique d'entreprise complète, 100 % virtualisée et hautement disponible a été conçue.
+**SBN Solution Tech** est une société spécialisée dans la vente et la réparation de matériel informatique haut de gamme. Pour répondre aux besoins d'organisation et de sécurité de la direction, de l'atelier de réparation et du magasin, une infrastructure d'entreprise complète, 100 % virtualisée et hautement disponible a été conçue.
 
 L'ensemble de l'environnement est virtualisé sur la plateforme **Proxmox VE** hébergée sur un serveur physique **Dell PowerEdge R730**.
 
@@ -76,13 +76,6 @@ L'ensemble de l'environnement est virtualisé sur la plateforme **Proxmox VE** h
 5. Créez le bridge principal des VLANs **`vmbr2`** (Nom : `LAN_VLANs`, cocher **VLAN aware**).
 6. Cliquez sur **Apply Configuration**.
 
-*Remarque technique : En cas de changement de carte MAC sous Proxmox 7/8, modifiez le fichier d'interface de l'hôte :*
-```bash
-nano /etc/network/interfaces
-# Ajouter sous l'interface WAN (vmbr0) :
-# hwaddress xx:xx:xx:xx:xx:xx
-```
-
 #### Étape B : Configuration de pfSense et Routage Inter-VLAN
 1. Assignez les 3 interfaces virtuelles à la VM pfSense :
    * `em0` / `vtnet0` -> `vmbr0` (WAN Internet)
@@ -100,17 +93,31 @@ nano /etc/network/interfaces
 
 ### 3.2. Active Directory, DFS & Stratégies de Groupe (GPO)
 
+![Architecture Active Directory & DFS](images/ad-dfs-architecture.png)
+
 #### Étape A : Déploiement et Réplication des Contrôleurs de Domaine
 1. Installez le rôle **AD DS** et **DNS** sur `SRV-DC01-D` et créez la forêt **`sbn.solution`**.
 2. Joignez le serveur secondaire `SRV-DC02-M` au domaine `sbn.solution` et promouvez-le en contrôleur de domaine répliqué.
 
-![Architecture Active Directory & DFS](images/ad-dfs-architecture.png)
+##### Captures de configuration IP & Active Directory :
+| Configuration IP DC01 | Configuration IP DC02 | Arborescence AD Users & PCs |
+| :---: | :---: | :---: |
+| ![IP DC01](images/captures/ip-dc01.png) | ![IP DC02](images/captures/ip-dc02.png) | ![AD Users PCs](images/captures/ad-users-pcs.png) |
+
+* Console DNS & Résolution de Noms : `![DNS Manager](images/captures/dns-manager.png)`
+* Gestion des Groupes & Utilisateurs AD : `![Groupes AD](images/captures/Utilisateurs-Groupes.png)`
 
 #### Étape B : Configuration du DFS & Stratégies de Groupe (GPO)
 1. **DFS (Distributed File System)** :
    * Racine de l'espace de noms : `\\sbn.solution\Users`
    * Dossier cible : `Data` sur disque dédié `S:` (250 Go)
    * Groupe de réplication : `Users-Replication` synchronisé entre DC01 et DC02.
+
+##### Captures DFS & Redirection GPO :
+| Espace de Noms DFS | Redirection de Dossiers GPO |
+| :---: | :---: |
+| ![DFS Users](images/captures/dfs-users.png) | ![GPO Redirection](images/captures/gpo-redirection.png) |
+
 2. **GPOs Déployées** :
    * **Redirections-Dossiers-Users** : Redirige *Documents, Bureau, Images, Téléchargements* vers `\\sbn.solution\Users\Data\%USERNAME%`.
    * **NAS-Mapping-A** : Mappe le lecteur `A:` (`\\NAS-D\Atelier`) pour le groupe `Users-A`.
@@ -130,6 +137,11 @@ nano /etc/network/interfaces
    * Groupes créés : `Administrators`, `Users-A` (Atelier), `Users-D` (Direction), `Users-M` (Magasin).
    * Dossiers partagés : `Atelier`, `Direction`, `Magasin`, `Wallpaper`.
 3. **Extensions OMV-Extras** : Activation de **FileBrowser** et **PhotoPrism**.
+
+##### Captures de Gestion des Disques & Tâches de Sauvegarde Automatisées :
+| Gestion des Disques | Tâche Planifiée de Sauvegarde |
+| :---: | :---: |
+| ![Gestion des Disques](images/captures/Disques.png) | ![Backup Task](images/captures/backup-task.png) |
 
 ---
 
@@ -211,4 +223,4 @@ docker compose up -d
 
 ## 🎓 5. Cadre Académique & Crédits
 
-Projet d'Épreuve Technique réalisé par **Nithilan SHUBASKARAN** dans le cadre du **BTS Services Informatiques aux Organisations (SIO) - Option SISR** (Session 2024–2026).
+Projet d'Épreuve Technique réalisé dans le cadre du **BTS Services Informatiques aux Organisations (SIO) - Option SISR** (Session 2024–2026).
