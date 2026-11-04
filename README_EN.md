@@ -49,7 +49,7 @@ The entire environment is hosted on a **Proxmox VE** hypervisor running on a phy
   * Strict isolation between Store (VLAN 30) and Management (VLAN 10).
   * Allowed ports: `53` (DNS), `88` (Kerberos), `445/139` (SMB), `80/443` (HTTP/HTTPS).
 
-![pfSense Firewall Rules Configuration](images/pfsense-firewall-rules.png)
+*📌 [pfSense Firewall Rules Configuration]*
 
 ---
 
@@ -65,8 +65,8 @@ The entire environment is hosted on a **Proxmox VE** hypervisor running on a phy
   * `GPO-Folder-Redirection`: Automatic redirection of *Desktop, Documents, Downloads, Pictures*.
   * `GPO-Drive-Mapping`: Automatic mapping of `A:` (Atelier), `D:` (Direction), `M:` (Magasin).
 
-![Active Directory Users and Computers](images/ad-dsa-console.png)
-![DFS Management and Replication Status](images/dfs-replication-status.png)
+*📌 [Active Directory Users and Computers]*
+*📌 [DFS Management and Replication Status]*
 
 ---
 
@@ -79,7 +79,7 @@ The entire environment is hosted on a **Proxmox VE** hypervisor running on a phy
   * Share `/srv/dev-disk-by-uuid/Magasin` -> Group `Users-M` (Read/Write)
   * Share `/srv/dev-disk-by-uuid/Wallpaper` -> Group `Domain Users` (Read-Only)
 
-![OpenMediaVault RAID 1 Storage Status](images/omv-raid-mirror.png)
+*📌 [OpenMediaVault RAID 1 Storage Status]*
 
 ---
 
@@ -89,7 +89,7 @@ The entire environment is hosted on a **Proxmox VE** hypervisor running on a phy
 * **FQDN & Services**: `mail.sbn.solution` hosting Webmail (SOGo), Postfix SMTP, Dovecot IMAP, Rspamd.
 * **Active Directory Integration**: LDAP sync configuration for central user authentication.
 
-![Mailcow Admin UI & Sync Status](images/mailcow-admin-dashboard.png)
+*📌 [Mailcow Admin UI & Sync Status]*
 
 ---
 
@@ -98,7 +98,7 @@ The entire environment is hosted on a **Proxmox VE** hypervisor running on a phy
 * **LAMP Stack**: Apache2, MariaDB Server, PHP 8.2.
 * **Functionality**: Customer relationships, invoicing, inventory tracking, repair job work-orders.
 
-![Dolibarr ERP Dashboard](images/dolibarr-dashboard.png)
+*📌 [Dolibarr ERP Dashboard]*
 
 ---
 
@@ -107,7 +107,7 @@ The entire environment is hosted on a **Proxmox VE** hypervisor running on a phy
 * **Media Transfer**: SFTP access (Port 22) via FileZilla for marketing media uploads.
 * **Client Display**: Windows/Linux Xibo Player connected to Store display monitors.
 
-![Xibo Digital Signage Layout Manager](images/xibo-cms-layout.png)
+*📌 [Xibo Digital Signage Layout Manager]*
 
 ---
 

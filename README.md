@@ -5,18 +5,8 @@
 
 ---
 
-🌐 **Langues / Languages** : [Français](README-v2.md) | [English](README_EN.md)
+🌐 **Langues / Languages** : [Français](README.md) | [English](README_EN.md)
 
----
-
-## 📸 Guide d'intégration des Captures d'Écran dans GitHub
-
-Pour afficher vos propres captures d'écran dans ce document sur GitHub :
-1. Créez un dossier nommé **`images/`** à la racine de votre dépôt GitHub.
-2. Déposez-y vos captures d'écran en respectant les noms indiqués ci-dessous (ex. `images/proxmox-bridges.png`, `images/pfsense-rules.png`, etc.).
-3. GitHub affichera automatiquement les images dans les sections correspondantes.
-
----
 
 ## 📋 1. Présentation Générale de l'Entreprise & du Projet
 
@@ -68,7 +58,7 @@ L'ensemble de l'environnement est virtualisé sur la plateforme **Proxmox VE** h
 | `SRV-XIBO-M` | Ubuntu Server 22.04 / Docker | `192.168.30.14` | Serveur d'Affichage Dynamique Xibo CMS & SFTP |
 | `Player-XIBO0X` | Windows 11 Pro | DHCP (VLAN 30) | Écrans d'affichage en vitrine avec Xibo Player |
 
-![Gestionnaire DNS et adresses IP](images/dns-records.png)
+*📌 [Gestionnaire DNS et adresses IP]*
 
 ---
 
@@ -84,7 +74,7 @@ L'ensemble de l'environnement est virtualisé sur la plateforme **Proxmox VE** h
 5. Créez le bridge principal des VLANs **`vmbr2`** (Nom : `LAN_VLANs`, cocher **VLAN aware**).
 6. Cliquez sur **Apply Configuration**.
 
-![Création de Linux Bridge dans Proxmox](images/proxmox-bridge-create.png)
+*📌 [Création de Linux Bridge dans Proxmox]*
 
 *Remarque technique : En cas de changement de carte MAC sous Proxmox 7/8, modifiez le fichier d'interface de l'hôte [23, 24] :*
 ```bash
@@ -106,7 +96,7 @@ nano /etc/network/interfaces
    * Bloquer par défaut le flux inter-VLAN.
    * Autoriser spécifiquement les flux AD entre VLAN 10 et 30 (`LDAP 389/636`, `Kerberos 88`, `RPC 135`, `DNS 53`).
 
-![Configuration des VLANs sur pfSense](images/pfsense-vlans.png)
+*📌 [Configuration des VLANs sur pfSense]*
 
 ---
 
@@ -127,8 +117,8 @@ nano /etc/network/interfaces
    * **NAS-Mapping-D** : Mappe le lecteur `D:` (`\\NAS-D\Direction`) pour le groupe `Users-D`.
    * **NAS-Mapping-M** : Mappe le lecteur `M:` (`\\NAS-D\Magasin`) pour le groupe `Users-M`.
 
-![Éditeur de Gestion des GPO - Mappage de Lecteurs](images/gpo-mapping.png)
-![Redirection de dossiers utilisateurs](images/gpo-redirections.png)
+*📌 [Éditeur de Gestion des GPO - Mappage de Lecteurs]*
+*📌 [Redirection de dossiers utilisateurs]*
 
 ---
 
@@ -142,8 +132,8 @@ nano /etc/network/interfaces
    * Dossiers partagés : `Atelier`, `Direction`, `Magasin`, `Wallpaper`.
 3. **Extensions OMV-Extras** : Activation de **FileBrowser** et **PhotoPrism** [65].
 
-![Tableau de bord OpenMediaVault et Disques RAID 1](images/omv-raid-disks.png)
-![Permissions des Dossiers Partagés OMV](images/omv-shared-folders.png)
+*📌 [Tableau de bord OpenMediaVault et Disques RAID 1]*
+*📌 [Permissions des Dossiers Partagés OMV]*
 
 ---
 
@@ -181,7 +171,7 @@ crontab -e
 * * * * * cd /opt/mailcow-dockerized && /usr/bin/docker compose exec -T php-fpm-mailcow php /web/inc/scripts/ldap_sync.php > /dev/null 2>&1
 ```
 
-![Interface d'Administration Mailcow UI](images/mailcow-admin.png)
+*📌 [Interface d'Administration Mailcow UI]*
 
 ---
 
@@ -191,7 +181,7 @@ crontab -e
 2. **Fonctionnalités** : Suivi commercial, gestion des stocks et de la facturation [46].
 3. **Partage SMB & Sauvegardes** : Intégration de Samba pour les pièces jointes et script de dump automatisé de la base MariaDB vers le NAS `NAS-D` [49, 50].
 
-![Interface de gestion Dolibarr](images/dolibarr-dashboard.png)
+*📌 [Interface de gestion Dolibarr]*
 
 ---
 
@@ -213,8 +203,8 @@ docker compose up -d
 * **Port** : `22`
 * **Utilisateur** : `xibo`
 
-![Tableau de bord Xibo CMS et Players](images/xibo-cms.png)
-![Transfert SFTP via FileZilla](images/filezilla-sftp.png)
+*📌 [Tableau de bord Xibo CMS et Players]*
+*📌 [Transfert SFTP via FileZilla]*
 
 ---
 
