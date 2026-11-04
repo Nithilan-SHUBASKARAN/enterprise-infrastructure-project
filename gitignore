@@ -1,0 +1,25 @@
+# Fichiers temporaires système et OS
+.DS_Store
+Thumbs.db
+*.tmp
+*.log
+
+# Fichiers d'environnement et secrets (sécurité)
+.env
+*.pem
+*.key
+*.pfx
+*.crt
+
+# Fichiers d'infrastructures / VM / sauvegardes
+*.iso
+*.qcow2
+*.vmdk
+*.vhd
+*.tar.gz
+*.zip
+*.bak
+
+# Dossiers d'IDE ou d'éditeurs
+.vscode/
+.idea/
