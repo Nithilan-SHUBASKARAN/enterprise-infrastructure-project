@@ -106,6 +106,8 @@ nano /etc/network/interfaces
 1. Installez le rôle **AD DS** et **DNS** sur `SRV-DC01-D` et créez la forêt **`sbn.solution`**.
 2. Joignez le serveur secondaire `SRV-DC02-M` au domaine `sbn.solution` et promouvez-le en contrôleur de domaine répliqué.
 
+![Architecture Active Directory & DFS](images/ad-dfs-architecture.png)
+
 #### Étape B : Configuration du DFS & Stratégies de Groupe (GPO)
 1. **DFS (Distributed File System)** :
    * Racine de l'espace de noms : `\\sbn.solution\Users`

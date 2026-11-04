@@ -6,8 +6,8 @@
 ---
 
 ## 🌐 Language Selection
-* **[Français (French)](README-v2.md)**
-* **[English](README_EN-v2.md)**
+* **[Français (French)](README.md)**
+* **[English](README_EN.md)**
 
 ---
 
