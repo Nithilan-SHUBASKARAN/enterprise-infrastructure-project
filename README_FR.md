@@ -262,5 +262,5 @@ docker compose up -d
 ## 🎓 5. Cadre Académique & Crédits
 
 Projet d'Épreuve Technique réalisé dans le cadre du **BTS Services Informatiques aux Organisations (SIO) - Option SISR** (Session 2024–2026).  
-*Projet - Pensé et Mis en place par* **Samuel NIQUILLE, Bryan GRAS and Nithilan SHUBASKARAN**
+*Projet - Pensé et Mis en place par* **Samuel NIQUILLE, Bryan GRAS and Nithilan SHUBASKARAN**.
 *GitHub - Création & Publication par* **Nithilan SHUBASKARAN**
